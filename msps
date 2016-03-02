@@ -1,0 +1,45 @@
+#!/bin/bash
+
+set -e
+
+INTERFACE="$1"
+
+function configure_proxy() {
+    ENABLED=$1
+    VARIABLE=$2
+    HOST=$3
+    PORT=$4
+    if [[ "$ENABLED" == "Yes" ]]; then
+        eval "export ${VARIABLE}=${HOST}:${PORT}"
+        echo "Set ${VARIABLE}=${!VARIABLE}"
+    else
+        eval "unset ${VARIABLE}"
+        echo "Unset ${VARIABLE}"
+    fi
+}
+
+function set_bypass_domains() {
+    INTERFACE=$1
+    BYPASS_DOMAINS=`networksetup -getproxybypassdomains ${INTERFACE} | tr '\n' ',' | sed 's/.$//'`
+    export no_proxy="${BYPASS_DOMAINS}"
+    echo "Set no_proxy=${no_proxy}"
+}
+
+### Main ###
+
+if [[ $# -ne 1 ]]; then
+    echo "Usage: $0 <INTERFACE>"
+    exit 1
+fi
+
+WEB_PROXY_STATE=`networksetup -getwebproxy "$INTERFACE" | grep '^Enabled: ' | awk '{print $2}'`
+WEB_PROXY_HOST=`networksetup -getwebproxy "$INTERFACE" | grep '^Server: ' | awk '{print $2}'`
+WEB_PROXY_PORT=`networksetup -getwebproxy "$INTERFACE" | grep '^Port: ' | awk '{print $2}'`
+
+SECURE_PROXY_STATE=`networksetup -getsecurewebproxy "$INTERFACE" | grep '^Enabled: ' | awk '{print $2}'`
+SECURE_PROXY_HOST=`networksetup -getsecurewebproxy "$INTERFACE" | grep '^Server: ' | awk '{print $2}'`
+SECURE_PROXY_PORT=`networksetup -getsecurewebproxy "$INTERFACE" | grep '^Port: ' | awk '{print $2}'`
+
+configure_proxy ${WEB_PROXY_STATE} "http_proxy" ${WEB_PROXY_HOST} ${WEB_PROXY_PORT}
+configure_proxy ${SECURE_PROXY_STATE} "https_proxy" ${SECURE_PROXY_HOST} ${SECURE_PROXY_PORT}
+set_bypass_domains ${INTERFACE}
