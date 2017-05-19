@@ -1,6 +1,7 @@
-#!/bin/bash
+# You need to *source* this, *not* execute it
+# for it to affect your currently running shell!
 
-set -e
+# https://github.com/noroute/msps
 
 INTERFACE="$1"
 
