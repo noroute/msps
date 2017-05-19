@@ -4,7 +4,7 @@ set -e
 
 INTERFACE="$1"
 
-function configure_proxy() {
+function configure_proxy {
     ENABLED=$1
     VARIABLE=$2
     HOST=$3
@@ -18,7 +18,7 @@ function configure_proxy() {
     fi
 }
 
-function set_bypass_domains() {
+function set_bypass_domains {
     INTERFACE=$1
     BYPASS_DOMAINS=$(networksetup -getproxybypassdomains "${INTERFACE}" | tr '\n' ',' | sed 's/.$//')
     export no_proxy="${BYPASS_DOMAINS}"
