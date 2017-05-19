@@ -1,16 +1,29 @@
-# MSPS
-`msps` is the Mac Shell Proxy Setter. It takes care of all your shell proxy worries.
+# MSPS #
 
-# Usage
-`source msps <INTERFACE>` sets your `http_proxy`, `https_proxy` and `no_proxy` shell variables
-according to the settings in your Mac Network preferences.
+`msps` is the *M*ac *S*hell *P*roxy *S*etter. It takes care of all your shell
+proxy worries.
 
-`<INTERFACE>` is the network interface name as given by `networksetup -listallnetworkservices`.
+# <INTERFACE>? # 
 
-Put it into your `PATH` by downloading it with `curl -O https://raw.githubusercontent.com/noroute/msps/master/msps; chmod a+x msps`.
+`<INTERFACE>` is the network interface name as given by `networksetup
+-listallnetworkservices` (*not* the ones retrieved through `ifconfig`).
 
-# Integration
-Put `source msps "YOUR_FAVORITE_INTERFACE"` into the shell startup configuration file of your choice
-(e.g. `.bashrc`, `.zshrc`). Remember that the configuration only takes place on shell startup and you have to `source` the script for the settings to have any effect on your actual shell.
-Changes to your network settings in the preference pane will only become active for new shells
-or when you re-source `msps`.
+# One-off usage #
+
+`source msps <INTERFACE>` sets your `http_proxy`, `https_proxy` and `no_proxy`
+variables in the *current* shell according to the settings in your Mac Network
+preferences.
+
+# Permanent "installation" #
+
+Put `source SOMEPATH/msps "YOUR_FAVORITE_INTERFACE"` into the shell startup
+configuration file of your choice (e.g. `.bashrc`, `.zshrc`). You can download
+it through `curl -O https://raw.githubusercontent.com/noroute/msps/master/msps`.
+
+Remember that after changing the network environment you need to re-source
+`msps` for the changes to take effect.
+
+# Compatibility #
+
+`msps` has been tested with Mac OS X 10.8 to 10.11 with `bash` and `zsh`. Many
+other setups may work but are untested.
