@@ -4,17 +4,29 @@ set -e
 
 INTERFACE="$1"
 
-function configure_proxy {
+function configure_http_proxy {
     ENABLED=$1
-    VARIABLE=$2
-    HOST=$3
-    PORT=$4
+    HOST=$2
+    PORT=$3
     if [[ "$ENABLED" == "Yes" ]]; then
-        eval "export ${VARIABLE}=${HOST}:${PORT}"
-        echo "Set ${VARIABLE}=${!VARIABLE}"
+        export http_proxy="${HOST}":"${PORT}"
+        echo "Set http_proxy to ${http_proxy}"
     else
-        eval "unset ${VARIABLE}"
-        echo "Unset ${VARIABLE}"
+        unset http_proxy
+        echo "Unset http_proxy"
+    fi
+}
+
+function configure_https_proxy {
+    ENABLED=$1
+    HOST=$2
+    PORT=$3
+    if [[ "$ENABLED" == "Yes" ]]; then
+        export https_proxy="${HOST}":"${PORT}"
+        echo "Set https_proxy to ${https_proxy}"
+    else
+        unset https_proxy
+        echo "Unset https_proxy"
     fi
 }
 
@@ -40,6 +52,6 @@ SECURE_PROXY_STATE=$(networksetup -getsecurewebproxy "$INTERFACE" | grep '^Enabl
 SECURE_PROXY_HOST=$(networksetup -getsecurewebproxy "$INTERFACE" | grep '^Server: ' | awk '{print $2}')
 SECURE_PROXY_PORT=$(networksetup -getsecurewebproxy "$INTERFACE" | grep '^Port: ' | awk '{print $2}')
 
-configure_proxy "${WEB_PROXY_STATE}" "http_proxy" "${WEB_PROXY_HOST}" "${WEB_PROXY_PORT}"
-configure_proxy "${SECURE_PROXY_STATE}" "https_proxy" "${SECURE_PROXY_HOST}" "${SECURE_PROXY_PORT}"
+configure_http_proxy "${WEB_PROXY_STATE}" "${WEB_PROXY_HOST}" "${WEB_PROXY_PORT}"
+configure_https_proxy "${SECURE_PROXY_STATE}" "${SECURE_PROXY_HOST}" "${SECURE_PROXY_PORT}"
 set_bypass_domains "${INTERFACE}"
