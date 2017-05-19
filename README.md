@@ -3,7 +3,7 @@
 `msps` is the *M*ac *S*hell *P*roxy *S*etter. It takes care of all your shell
 proxy worries.
 
-# <INTERFACE>? # 
+# INTERFACE? # 
 
 `<INTERFACE>` is the network interface name as given by `networksetup
 -listallnetworkservices` (*not* the ones retrieved through `ifconfig`).
